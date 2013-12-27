@@ -1,5 +1,6 @@
 var exec = require("child_process").exec;
 var querystring = require("querystring");
+var fs = require("fs");
 
 function start(response) {
 	console.log("request handler for start called");
@@ -35,5 +36,23 @@ function sleep(milliseconds) {
 	while (new Date().getTime() < (startTime + milliseconds));
 }
 
+function show(response, postData) {
+	console.log("Request handler for 'show' was called.");
+	fs.readFile("/Users/joohwanoh/scan/sears.natuzzi.sofa.contact.jpg",
+		"binary", 
+		function(error, file) {
+			if (error) {
+				response.writeHead(500, {"Content-Type":"text/html"});
+				response.write(error + "\n");
+				response.end();
+			} else {
+				response.writeHead(200, {"Content-Type":"image/jpeg"});
+				response.write(file, "binary");
+				response.end();
+			}
+		});
+}
+
 exports.start = start;
 exports.upload = upload;
+exports.show = show;
